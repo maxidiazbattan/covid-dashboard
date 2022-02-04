@@ -54,6 +54,7 @@ select_continent = {x : x for x in data["continent"].dropna().unique()}
 # ]
 
 app = dash.Dash(__name__,external_stylesheets = [dbc.themes.CYBORG])# [dbc.themes.CYBORG]) 
+server = app.server
 
 app.layout = dbc.Container([
     
