@@ -1,4 +1,4 @@
-joblib==1.1.0
-sklearn
+dash==2.0.0 
 pandas>=0.19
-streamlit
+dash_bootstrap_components 
+
