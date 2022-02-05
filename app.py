@@ -65,7 +65,7 @@ app.layout = dbc.Container([
                      ], width={'size':4, 'offset':4}, className="mb-4"),
             ]), 
              
-     dbc.Row([dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed cases per million", className="card-text text-center"),
+    dbc.Row([dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed cases per million", className="card-text text-center"),
                                              html.H3(style={"color": "#389fd6"}, id="casos-confirmados-text"),
                                              html.H5(id="nuevos-casos-text", children="0"),])
                                  ], className="card text-center" )], width=4),
@@ -78,9 +78,9 @@ app.layout = dbc.Container([
             dbc.Col([dbc.Card([dbc.CardBody([html.Span("Mortality rate %", className="card-text text-center"),
                                                html.H3(style={"color": "#adatac92"}, id="mortality-rate-text"),
                                                html.H5(id="mortalidad-text", children="0"), ])
-                                 ], className="card text-center" )],width=4),
-             ]),
-
+                                 ], className="card text-center" )],width=4),             
+            ]),
+    
     dbc.Row([
         dbc.Col([
             dbc.Card([
@@ -146,8 +146,8 @@ def display_status(continent):#, start_date, end_date):
 
     dfq = dfq.query(f'continent == "{continent}"')
     
-    casos_acumulados = dfq['new_cases_per_million'].sum().round(2) 
-    muertes_acumulado = dfq['new_deaths_per_million'].sum().round(2) 
+    casos_acumulados = round(dfq['new_cases_per_million'].sum() / dfq['location'].nunique(), 2)
+    muertes_acumulado = round(dfq['new_deaths_per_million'].sum() / dfq['location'].nunique(), 2)
     mortality_rate = round((dfq['total_deaths'] / dfq['total_cases'] * 100).sum() / len(dfq['total_deaths'].dropna()), 2)
 
     return (
@@ -186,7 +186,6 @@ def update_pie(continent):#, start_date, end_date):
     
     return fig_pie
 
-
 # Hist Chart ***********************************************************
 @app.callback(
     Output('hist1-plot','figure'),
@@ -196,17 +195,17 @@ def update_pie(continent):#, start_date, end_date):
 )
 def update_hist1(continent):#, start_date, end_date):
     
-    df1 = data.copy()
+    df2 = data.copy()
     
-    start_date = df1['date'].min()
-    end_date = df1['date'].max()
+    start_date = df2['date'].min()
+    end_date = df2['date'].max()
 
-    df1 = df1[(df1['date']>=start_date) & (df1['date']<=end_date)]
+    df2 = df2[(df2['date']>=start_date) & (df2['date']<=end_date)]
     
-    df1 = df1.query(f'continent == "{continent}"')
+    df2 = df2.query(f'continent == "{continent}"')
 
 
-    fig_hist1 = px.histogram(data_frame = df1, y = 'location', x = df1['people_fully_vaccinated_per_million'].rolling(7).mean(), color = 'location',
+    fig_hist1 = px.histogram(data_frame = df2, y = 'location', x = df2['people_fully_vaccinated_per_million'].rolling(7).mean(), color = 'location',
              color_discrete_sequence=px.colors.qualitative.Plotly, 
              labels = {'location': 'Country', 'people_fully_vaccinated_per_million': 'Fully vaccinated per million'},
              title = 'Fully vaccinated per million')
@@ -234,17 +233,17 @@ def update_hist1(continent):#, start_date, end_date):
 )
 def update_hist2(continent):#, start_date, end_date):
     
-    df2 = data.copy()
+    df3 = data.copy()
 
-    start_date = df2['date'].min()
-    end_date = df2['date'].max()
+    start_date = df3['date'].min()
+    end_date = df3['date'].max()
 
-    df2 = df2[(df2['date']>=start_date) & (df2['date']<=end_date)]
+    df3 = df3[(df3['date']>=start_date) & (df3['date']<=end_date)]
     
-    df2 = df2.query(f'continent == "{continent}"')
+    df3 = df3.query(f'continent == "{continent}"')
 
 
-    fig_hist2 = px.histogram(data_frame = df2, y = 'location', x = 'new_deaths_per_million', color = 'location',
+    fig_hist2 = px.histogram(data_frame = df3, y = 'location', x = 'new_deaths_per_million', color = 'location',
                              color_discrete_sequence=px.colors.qualitative.Plotly, 
                              labels = {'location': 'Country', 'new_deaths_per_million': 'Deaths per million'},
                              title = 'Deaths per million', 
@@ -274,17 +273,17 @@ def update_hist2(continent):#, start_date, end_date):
 )
 def update_line(continent):#, start_date, end_date):
     
-    df3 = data.copy()
+    df4 = data.copy()
 
-    start_date = df3['date'].min()
-    end_date = df3['date'].max()
+    start_date = df4['date'].min()
+    end_date = df4['date'].max()
 
-    df3 = df3[(df3['date']>=start_date) & (df3['date']<=end_date)]
+    df4 = df4[(df4['date']>=start_date) & (df4['date']<=end_date)]
     
-    df3 = df3.query(f'continent == "{continent}"')
+    df4 = df4.query(f'continent == "{continent}"')
 
 
-    fig_line = px.area(data_frame = df3, x = 'date', y = 'new_cases_per_million', color = 'location',
+    fig_line = px.area(data_frame = df4, x = 'date', y = 'new_cases_per_million', color = 'location',
                        color_discrete_sequence=px.colors.qualitative.Plotly, 
                        labels = {'location': 'Country', 'new_cases_per_million': 'Cases per million'},
                        title = 'Cases per million')
