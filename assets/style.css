@@ -1,7 +1,7 @@
 body {
     font-family: "Lato", sans-serif;
     margin: 0;
-    background-color: #000000;
+    background-color: #202020;
 }
 
 .header {
@@ -42,7 +42,8 @@ body {
 }
 
 .card {
-    background-color: #000000
+    background-color: #000000;
+    text-align: center;
     margin-bottom: 24px;
     box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
 }
