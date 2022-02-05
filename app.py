@@ -79,10 +79,7 @@ app.layout = dbc.Container([
                                                html.H3(style={"color": "#adatac92"}, id="mortality-rate-text"),
                                                html.H5(id="mortalidad-text", children="0"), ])
                                  ], className="card text-center" )],width=4),
-             
-             
-            ]),
-    
+             ]),
 
     dbc.Row([
         dbc.Col([
@@ -122,7 +119,6 @@ app.layout = dbc.Container([
     
     
 ], fluid=True)
-
 
 
 # Updating the 3 number cards ******************************************
