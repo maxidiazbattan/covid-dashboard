@@ -50,8 +50,8 @@ server = app.server
 
 app.layout = dbc.Container([
     
-    dbc.Row(dbc.Col(html.P(children="💉", className="header-emoji text-center"), width=12)),
-    dbc.Row(dbc.Col(html.H1("COVID-19 Dashboard", className='header-title text-center'), width=12)),
+    #dbc.Row(dbc.Col(html.P(children="💉", className="header-emoji text-center"), width=12)),
+    dbc.Row(dbc.Col(html.H1("COVID-19 Dashboard 💉", className='header-title text-center'), width=12)),
     
     dbc.Row([
             dbc.Col([
