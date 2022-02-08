@@ -146,8 +146,8 @@ def display_status(continent):#, start_date, end_date):
 
     dfq = dfq.query(f'continent == "{continent}"')
     
-    casos_acumulados = round(dfq['new_cases_per_million'].sum() / dfq['location'].nunique(), 2)
-    muertes_acumulado = round(dfq['new_deaths_per_million'].sum() / dfq['location'].nunique(), 2)
+    casos_acumulados = round(dfq[dfq['date'] == dfq['date'].max()]['new_cases_per_million'].sum(), 2)
+    muertes_acumulado = round(dfq['new_deaths_per_million'].sum(), 2)
     mortality_rate = round((dfq['total_deaths'] / dfq['total_cases'] * 100).sum() / len(dfq['total_deaths'].dropna()), 2)
 
     return (
@@ -211,10 +211,11 @@ def update_hist1(continent):#, start_date, end_date):
              title = 'Fully vaccinated per million')
 
     fig_hist1.update_yaxes(showgrid=False, ticksuffix=' ', showline=False, categoryorder='total ascending')
-    fig_hist1.update_xaxes(visible=False)
+    fig_hist1.update_xaxes(visible=True)
 
     fig_hist1.update_layout(margin=dict(t=100, b=10, l=70, r=40),showlegend=False,
                             hovermode="y unified", 
+                            xaxis_title=" ",
                             yaxis_title=" ", 
                             plot_bgcolor='#000000', paper_bgcolor='#000000',
                             title=dict(y=0.9, x=0.5, yanchor='top', xanchor='center'),
@@ -246,15 +247,14 @@ def update_hist2(continent):#, start_date, end_date):
     fig_hist2 = px.histogram(data_frame = df3, y = 'location', x = 'new_deaths_per_million', color = 'location',
                              color_discrete_sequence=px.colors.qualitative.Plotly, 
                              labels = {'location': 'Country', 'new_deaths_per_million': 'Deaths per million'},
-                             title = 'Deaths per million', 
-                             #template='plotly_dark'
-                            )
+                             title = 'Deaths per million')
 
     fig_hist2.update_yaxes(showgrid=False, ticksuffix=' ', showline=False, categoryorder='total ascending')
-    fig_hist2.update_xaxes(visible=False)
+    fig_hist2.update_xaxes(visible=True)
 
     fig_hist2.update_layout(margin=dict(t=100, b=10, l=70, r=40),showlegend=False,
                             hovermode="y unified", 
+                            xaxis_title=" ", 
                             yaxis_title=" ", 
                             plot_bgcolor='#000000', paper_bgcolor='#000000',
                             title=dict(y=0.9, x=0.5, yanchor='top', xanchor='center'),
