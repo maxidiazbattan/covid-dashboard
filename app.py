@@ -147,7 +147,7 @@ def display_status(continent):#, start_date, end_date):
     dfq = dfq.query(f'continent == "{continent}"')
     
     casos_acumulados = round(dfq[dfq['date'] == dfq['date'].max()]['new_cases_per_million'].sum(), 2)
-    muertes_acumulado = round(dfq['new_deaths_per_million'].sum(), 2)
+    muertes_acumulado = round(dfq[dfq['date'] == dfq['date'].max()]['new_deaths_per_million'].sum(), 2)
     mortality_rate = round((dfq['total_deaths'] / dfq['total_cases'] * 100).sum() / len(dfq['total_deaths'].dropna()), 2)
 
     return (
