@@ -64,6 +64,19 @@ app.layout = dbc.Container([
                          
                      ], width={'size':4, 'offset':4}, className="mb-4"),
             ]), 
+    
+    dbc.Row([    
+            dbc.Col([dbc.Card([dbc.CardBody([dcc.DatePickerRange(
+                                             id='my-date-picker-range',
+                                             min_date_allowed=data['date'].min(),
+                                             max_date_allowed=data['date'].max(),
+                                             initial_visible_month=data['date'].min(),
+                                             start_date=data['date'].min(),
+                                             end_date=data['date'].max()
+                                            ),])
+                            ],className="px-5"),
+                        ],width={'size':4, 'offset':4}, className="mb-2"),                  
+            ]),
              
     dbc.Row([dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed cases per million", className="card-text text-center"),
                                              html.H3(style={"color": "#389fd6"}, id="casos-confirmados-text"),
@@ -128,19 +141,16 @@ app.layout = dbc.Container([
     Output('muertes-text','children'),
     Output('mortalidad-text','children'),
     Input('continent-dropdown','value'),
-    #Input('my-date-picker-start','date'),
-    #Input('my-date-picker-end','date'),
+    Input('my-date-picker-range','start_date'),
+    Input('my-date-picker-range','end_date'),
 )
 
-def display_status(continent):#, start_date, end_date):
+def display_status(continent, start_date, end_date):
     
     dfq = data.copy()
 
     dfqw = dfq.query(f'continent == "{continent}"')
     casos_acumulados_ww = dfqw['new_cases_per_million'].sum().round(2)
-    
-    start_date = dfq['date'].min()
-    end_date = dfq['date'].max()
 
     dfq = dfq[(dfq['date']>=start_date) & (dfq['date']<=end_date)]
 
@@ -160,16 +170,13 @@ def display_status(continent):#, start_date, end_date):
 @app.callback(
     Output('pie-plot','figure'),
     Input('continent-dropdown','value'),
-    #Input('my-date-picker-start','date'),
-    #Input('my-date-picker-end','date'),
+    Input('my-date-picker-range','start_date'),
+    Input('my-date-picker-range','end_date'),
 )
-def update_pie(continent):#, start_date, end_date):
+def update_pie(continent, start_date, end_date):
     
     df1 = data.copy()
-
-    start_date = df1['date'].min()
-    end_date = df1['date'].max()
-
+    
     df1 = df1[(df1['date']>=start_date) & (df1['date']<=end_date)]
     
     df1 = df1.query(f'continent == "{continent}"')
@@ -190,16 +197,13 @@ def update_pie(continent):#, start_date, end_date):
 @app.callback(
     Output('hist1-plot','figure'),
     Input('continent-dropdown','value'),
-    #Input('my-date-picker-start','date'),
-    #Input('my-date-picker-end','date'),
+    Input('my-date-picker-range','start_date'),
+    Input('my-date-picker-range','end_date'),
 )
-def update_hist1(continent):#, start_date, end_date):
+def update_hist1(continent, start_date, end_date):
     
     df2 = data.copy()
     
-    start_date = df2['date'].min()
-    end_date = df2['date'].max()
-
     df2 = df2[(df2['date']>=start_date) & (df2['date']<=end_date)]
     
     df2 = df2.query(f'continent == "{continent}"')
@@ -229,15 +233,12 @@ def update_hist1(continent):#, start_date, end_date):
 @app.callback(
     Output('hist2-plot','figure'),
     Input('continent-dropdown','value'),
-    #Input('my-date-picker-start','date'),
-    #Input('my-date-picker-end','date'),
+    Input('my-date-picker-range','start_date'),
+    Input('my-date-picker-range','end_date'),
 )
 def update_hist2(continent):#, start_date, end_date):
     
     df3 = data.copy()
-
-    start_date = df3['date'].min()
-    end_date = df3['date'].max()
 
     df3 = df3[(df3['date']>=start_date) & (df3['date']<=end_date)]
     
@@ -268,15 +269,12 @@ def update_hist2(continent):#, start_date, end_date):
 @app.callback(
     Output('line-plot','figure'),
     Input('continent-dropdown','value'),
-    #Input('my-date-picker-start','date'),
-    #Input('my-date-picker-end','date'),
+    Input('my-date-picker-range','start_date'),
+    Input('my-date-picker-range','end_date'),
 )
-def update_line(continent):#, start_date, end_date):
+def update_line(continent, start_date, end_date):
     
     df4 = data.copy()
-
-    start_date = df4['date'].min()
-    end_date = df4['date'].max()
 
     df4 = df4[(df4['date']>=start_date) & (df4['date']<=end_date)]
     
