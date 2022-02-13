@@ -236,7 +236,7 @@ def update_hist1(continent, start_date, end_date):
     Input('my-date-picker-range','start_date'),
     Input('my-date-picker-range','end_date'),
 )
-def update_hist2(continent):#, start_date, end_date):
+def update_hist2(continent, start_date, end_date):
     
     df3 = data.copy()
 
