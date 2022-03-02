@@ -3,6 +3,6 @@ pandas>=0.19
 plotly>=5.0.0
 Flask==1.1.2
 Flask-Compress==1.5.0
-gunicorn==20.0.4
+gunicorn
 dash_bootstrap_components
 itsdangerous==2.0.1
