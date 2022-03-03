@@ -26,7 +26,7 @@ For Mac users, run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com
 This could take a few minutes. In the meantime...
 
 2. Create a free account on Heroku https://signup.heroku.com/login
-3. Create a `requirements.txt` file with all your non-standard dependencies (based on any libraries you are importing), separated by a newline. In our case, they are `Flask` w/ a capital F, `requests`, and `python-dotenv`. Note that libraries like `os` are standard imports, so they don't need to be included.
+3. Create a `requirements.txt` file with all your non-standard dependencies (based on any libraries you are importing), separated by a newline. In our case, they are `Flask` w/ a capital F. Note that libraries like `os` are standard imports, so they don't need to be included.
 4. Create a `Procfile`, which has the command that Heroku will use to run your app: `web: python app.py` (see documentation https://devcenter.heroku.com/articles/getting-started-with-python#define-a-procfile)
 5. Add + commit all changed files with git
 6. Log in to Heroku: `heroku login -i`
