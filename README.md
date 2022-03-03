@@ -18,10 +18,8 @@ In the following link you can see it, https://covid19dashboardwdash.herokuapp.co
 
 ## Deploy to Heroku
 1. Install Heroku CLI: 
-
-For WSL users, run `sudo curl https://cli-assets.heroku.com/install.sh | sh`. 
-
-For Mac users, run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` if you don't have Homebrew installed, then `brew tap heroku/brew && brew install heroku`. 
+- For WSL users, run `sudo curl https://cli-assets.heroku.com/install.sh | sh`. 
+- For Mac users, run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` if you don't have Homebrew installed, then `brew tap heroku/brew && brew install heroku`. 
 
 This could take a few minutes. In the meantime...
 
@@ -31,10 +29,7 @@ This could take a few minutes. In the meantime...
 5. Add + commit all changed files with git
 6. Log in to Heroku: `heroku login -i`
 5. Create a Heroku app: `heroku create`. This will create a new URL and associated host for you.
-6. Push your code to Heroku: `git push heroku main`. This actually pushes your code to Heroku's remote repository.
-
-You may get an error at this point relating to a buildpack. That means that Heroku can't figure out on its own what primary language your code is written in. You should be able to resolve this with `heroku buildpacks:set heroku/python`.
-
+6. Push your code to Heroku: `git push heroku main`. This actually pushes your code to Heroku's remote repository. You may get an error at this point relating to a buildpack. That means that Heroku can't figure out on its own what primary language your code is written in. You should be able to resolve this with `heroku buildpacks:set heroku/python`.
 7. Open your app with your new URL: `heroku open`. Click the link to open if it doesn't open on its own. It shouldn't work, because it doeesn't have any environment variables (remember, your `.env` file is not in your git repository!)
 8. Go to https://dashboard.heroku.com/apps and click your App, then go to Settings, and click "Reveal Config Vars"
 9. Run `heroku open` or refresh the URL if you have it open. 
