@@ -39,3 +39,8 @@ You may get an error at this point relating to a buildpack. That means that Hero
 8. Go to https://dashboard.heroku.com/apps and click your App, then go to Settings, and click "Reveal Config Vars"
 9. Run `heroku open` or refresh the URL if you have it open. 
 10. That's it, your app it's deployed, congrats!
+
+## Author
+
+* **Maximiliano Diaz Battan** 
+
