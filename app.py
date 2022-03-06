@@ -64,7 +64,7 @@ app.layout = dbc.Container([
                                      style= {'width': '100%', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
                                     ),
                          
-                     ]),], className="px-5 mb-2"),], width={'size':4, 'offset':0}, ),
+                     ]),], className="px-5 mt-2 mb-1"),], width={'size':4, 'offset':0}, ),
             ], justify='center'),
     
     dbc.Row([    
@@ -83,7 +83,7 @@ app.layout = dbc.Container([
                                                      'horizontalAlign' : "middle" }
                                             ),])
                             ],className="px-5"),
-                        ],width={'size':4, 'offset':0}, className="mb-2"),                  
+                        ],width={'size':4, 'offset':0}, className="mb-1"),                  
             ], justify='center'),
              
     dbc.Row([dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed cases per million", className="card-text text-center"),
@@ -109,7 +109,7 @@ app.layout = dbc.Container([
                     dcc.Graph(id='pie-plot', figure={}),
                  ]),
              ], ),
-         ], width=4, className="mt-2"),
+         ], width=4, className="mt-1"),
 
         dbc.Col([
             dbc.Card([
@@ -117,7 +117,7 @@ app.layout = dbc.Container([
                     dcc.Graph(id='hist1-plot', figure={}),
                 ]),
             ], ),
-        ], width=4, className="mt-2"),
+        ], width=4, className="mt-1"),
     
         dbc.Col([
             dbc.Card([
@@ -125,7 +125,7 @@ app.layout = dbc.Container([
                     dcc.Graph(id='hist2-plot', figure={})
                 ]),
             ], ),
-        ], width=4, className="mt-2"),
+        ], width=4, className="mt-1"),
     ],),
 
     dbc.Row([
@@ -135,7 +135,7 @@ app.layout = dbc.Container([
                     dcc.Graph(id='line-plot', figure={})
                 ]),
             ], ),
-        ], width=12, className="mt-2"),
+        ], width=12, className="mt-1"),
     ],),
     
     
