@@ -54,16 +54,18 @@ app.layout = dbc.Container([
     dbc.Row(dbc.Col(html.H1("COVID-19 Dashboard 💉", className='header-title text-center'), width=12)),
     
     dbc.Row([
-            dbc.Col([
-            dcc.Dropdown(id="continent-dropdown",
-                         options=[{"label": j, "value": i} for i, j in select_continent.items()],
-                         value="Africa", 
-                         clearable=False,
-                         style= {'width': '100%', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
-                        ),
+        dbc.Card([
+            dbc.CardBody([
+                dbc.Col([
+                    dcc.Dropdown(id="continent-dropdown",
+                                     options=[{"label": j, "value": i} for i, j in select_continent.items()],
+                                     value="Africa", 
+                                     clearable=False,
+                                     style= {'width': '100%', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
+                                    ),
                          
-                     ], width={'size':4, 'offset':0}, className="px-5 mb-2"),
-            ], justify='center'), 
+                     ]),], className="px-5 mb-2"),], width={'size':4, 'offset':0}, ),
+            ], justify='center'),
     
     dbc.Row([    
             dbc.Col([dbc.Card([dbc.CardBody([dcc.DatePickerRange(
