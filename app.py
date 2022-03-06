@@ -62,8 +62,8 @@ app.layout = dbc.Container([
                          style= {'width': '100%', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
                         ),
                          
-                     ], width={'size':4, 'offset':4}, className="mb-4"),
-            ]), 
+                     ], width={'size':4, 'offset':0}, className="px-5 mb-2"),
+            ], justify='center'), 
     
     dbc.Row([    
             dbc.Col([dbc.Card([dbc.CardBody([dcc.DatePickerRange(
@@ -72,11 +72,14 @@ app.layout = dbc.Container([
                                              max_date_allowed=data['date'].max(),
                                              initial_visible_month=data['date'].min(),
                                              start_date=data['date'].min(),
-                                             end_date=data['date'].max()
+                                             end_date=data['date'].max(),
+                                             style= {'Width': '90%', 'Height': '20px', 'font-size': '20px', 
+                                                     'align-items': 'center', 'verticalAlign' : "middle", 
+                                                     'horizontalAlign' : "middle" }
                                             ),])
                             ],className="px-5"),
-                        ],width={'size':4, 'offset':4}, className="mb-2"),                  
-            ]),
+                        ],width={'size':4, 'offset':0}, className="mb-2"),                  
+            ], justify='center'),
              
     dbc.Row([dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed cases per million", className="card-text text-center"),
                                              html.H3(style={"color": "#389fd6"}, id="casos-confirmados-text"),
