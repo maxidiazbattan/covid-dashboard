@@ -3,6 +3,14 @@ In this repro I have created a dashboard with Dash, a Python framework that allo
 In the following link you can see it, https://covid19dashboardwdash.herokuapp.com/ (it takes a bit to load the first time because it's dorment at Heroku Servers). I hope you like it, and the instructions to use it are below.
 
 
+# Built With
+
+* [Python](https://docs.python.org/3/) - Programming language
+* [Pandas](https://pandas.pydata.org/docs/) - Data manipulation python library
+* [Plotly](https://plotly.com/python/) - Graphing python library
+* [Dash](https://dash.plotly.com/) - Dashboard python library
+
+
 # Heroku Deployment
 
 ## Copy this repo to your own personal one
@@ -35,7 +43,8 @@ This could take a few minutes. In the meantime...
 9. Run `heroku open` or refresh the URL if you have it open. 
 10. That's it, your app it's deployed, congrats!
 
-## Author
+
+# Author
 
 * **Maximiliano Diaz Battan** 
 
