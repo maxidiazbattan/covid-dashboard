@@ -1,8 +1,9 @@
 ![covid dash.png](https://github.com/maxidiazbattan/covid-dashboard/blob/main/assets/covid%20dash.png?raw=true)
 
 # Covid-dashboard 
-In this repro I have created a dashboard with Dash, a Python framework that allows you to create web apps in pure Python, without the need to use JavaScript, HTML or CSS, for more info you can check the documentation here, https://dash.plotly.com/. 
-In the following link you can see it, https://covid19dashboardwdash.herokuapp.com/ (it takes a bit to load the first time because it's dorment at Heroku Servers). I hope you like it, and the instructions to use it are below.
+For this dashboard, I have used the plots of one of my Kaggle notebooks, https://www.kaggle.com/code/maxdiazbattan/covid-eda-on-latin-america-dash-dashboard. The data was extracted from the Our World in Data website and was cleaned and filtered with Pandas.
+The dashboard was made with Dash, a Python framework that allows you to create web apps in pure Python, for more info you can check the documentation here, https://dash.plotly.com/. 
+In the following link you can see it, https://covid19dashboardwdash.herokuapp.com/ (it takes a bit to load the first time because it's dormant at Heroku Servers). I hope you like it, and the instructions to use it are below.
 
 
 # Heroku Deployment
