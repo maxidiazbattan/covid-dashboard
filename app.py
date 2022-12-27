@@ -21,6 +21,8 @@ def load_data():
 
     # Read the file with pandas
     data = pd.read_csv('owid-covid-data.csv')
+    
+    data = data.sample(frac=.25, random_state=42)
 
     data['date'] = pd.to_datetime(data['date'])
 
