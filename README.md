@@ -3,7 +3,7 @@
 # Covid-dashboard 
 For this dashboard, I have used the plots of one of my Kaggle notebooks, https://www.kaggle.com/code/maxdiazbattan/covid-eda-on-latin-america-dash-dashboard. The data was extracted from the Our World in Data website and was cleaned and filtered with Pandas.
 The dashboard was made with Dash, a Python framework that allows you to create web apps in pure Python, for more info you can check the documentation here, https://dash.plotly.com/. 
-In the following link you can see it, https://covid-dashboard-colj.onrender.com/ (it takes a bit to load the first time because it's dormant at Render Servers). I hope you like it, and the instructions to use it are below.
+In the following link you can see it, https://covid-dashboard-colj.onrender.com/ (it takes a bit to load the first time because it's dormant at Render Servers, the app works fine, but need to be patient the first time). I hope you like it, and the instructions to use it are below.
 
 
 # Render Deployment
