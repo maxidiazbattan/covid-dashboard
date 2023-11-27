@@ -22,7 +22,7 @@ def load_data():
     # Read the file with pandas
     data = pd.read_csv('owid-covid-data.csv')
     
-    data = data.sample(frac=.25, random_state=42)
+    data = data.sample(frac=.2, random_state=42)
 
     data['date'] = pd.to_datetime(data['date'])
 
@@ -30,6 +30,10 @@ def load_data():
     data['day'] = data['date'].dt.day
     data['month'] = data['date'].dt.month
     data['year'] = data['date'].dt.year
+
+    # Filtering 
+    years = [2020, 2021, 2022]
+    data = data[data.year.isin(years)]
 
     # Unifiyng units of messure 
     data['total_tests_per_million'] = data['total_tests_per_thousand'] * 1000
