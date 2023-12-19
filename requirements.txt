@@ -1,6 +1,5 @@
 dash==2.0.0 
 pandas>=0.19
-#numpy
 Jinja2==3.0.3
 plotly>=5.0.0
 Flask==2.1.0
