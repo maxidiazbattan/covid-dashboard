@@ -20,17 +20,26 @@ def load_data():
     urlretrieve(url, 'owid-covid-data.csv')
 
     # Read the file with pandas
-    data = pd.read_csv('owid-covid-data.csv')
+    data = pd.read_csv('owid-covid-data.csv', nrows=5)
 
-    # Data tipe handling
-    float_f = [feature for feature in data.columns if data[feature].dtype == 'float64']
-    data[float_f] = data[float_f].astype('float32')
-    use_cols = ['date', 'day', 'month', 'year','continent','location', 'total_cases', 'total_deaths', 'total_tests_per_million', 'new_tests_per_million', 'new_cases_per_million',
-                'new_deaths_per_million', 'hospital_beds_per_million', 'total_vaccinations_per_million', 'people_vaccinated_per_million', 'people_fully_vaccinated_per_million']
+    use_cols = ['iso_code', 'continent', 'location', 'date', 'total_tests_per_thousand','new_tests_per_thousand', 'hospital_beds_per_thousand', 
+                'total_vaccinations_per_hundred', 'people_vaccinated_per_hundred', 'people_fully_vaccinated_per_hundred', 'total_boosters_per_hundred']
+    
     data = data[use_cols]
+    
+    objct_f = [feature for feature in data.columns if data[feature].dtype == 'O']
+    float_f = [feature for feature in data.columns if data[feature].dtype == 'float64']
+    
+    col_dtypes_objct = {c: 'O' for c in data[objct_f].columns}
+    col_dtypes_float = {c: 'float32' for c in data[float_f].columns}
+    
+    dict_merge = lambda a,b: a.update(b) or a
+    col_dtypes = dict_merge(col_dtypes_objct, col_dtypes_float)
+    
+    data = pd.read_csv('owid-covid-data.csv', dtype=col_dtypes)
 
     # Sampling
-    data = data.sample(frac=.2, random_state=42)
+    data = data.sample(frac=.25, random_state=42)
 
     # Conversion to datetime
     data['date'] = pd.to_datetime(data['date'])
@@ -52,6 +61,10 @@ def load_data():
     data['people_vaccinated_per_million'] = data['people_vaccinated_per_hundred'] * 10000
     data['people_fully_vaccinated_per_million'] = data['people_fully_vaccinated_per_hundred'] * 10000
     data['total_boosters_per_million'] = data['total_boosters_per_hundred'] * 10000
+
+    use_cols = ['date', 'day', 'month', 'year','continent','location', 'total_cases', 'total_deaths', 'total_tests_per_million', 'new_tests_per_million', 'new_cases_per_million',
+                'new_deaths_per_million', 'hospital_beds_per_million', 'total_vaccinations_per_million', 'people_vaccinated_per_million', 'people_fully_vaccinated_per_million']
+    data = data[use_cols]
 
     return data
 
