@@ -25,6 +25,9 @@ def load_data():
     # Data tipe handling
     float_f = [feature for feature in data.columns if data[feature].dtype == 'float64']
     data[float_f] = data[float_f].astype('float32')
+    use_cols = ['date', 'day', 'month', 'year','continent','location', 'total_cases', 'total_deaths', 'total_tests_per_million', 'new_tests_per_million', 'new_cases_per_million',
+                'new_deaths_per_million', 'hospital_beds_per_million', 'total_vaccinations_per_million', 'people_vaccinated_per_million', 'people_fully_vaccinated_per_million']
+    data = data[use_cols]
 
     # Sampling
     data = data.sample(frac=.2, random_state=42)
