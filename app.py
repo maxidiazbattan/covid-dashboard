@@ -1,17 +1,26 @@
-#Importing the libraries.
+# Importing the libraries.
+
+# tools
+import os
+import gc
+from urllib.request import urlretrieve
+
+# dash & dash components
 import dash
 from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
 
+# plotly
 import plotly.express as px
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
-import gc
+# data handling 
 import pandas as pd
+
+# dates 
 from datetime import date
-from urllib.request import urlretrieve
 
 def load_data():
     # OWID covid Dataset URL:
@@ -22,7 +31,7 @@ def load_data():
 
     # Read the file with pandas
     data = pd.read_csv('owid-covid-data.csv', nrows=5)
-        
+       
     use_cols = ['iso_code', 'continent', 'location', 'date', 'total_tests_per_thousand','new_tests_per_thousand', 'hospital_beds_per_thousand', 
                 'total_vaccinations_per_hundred', 'people_vaccinated_per_hundred', 'people_fully_vaccinated_per_hundred', 'total_boosters_per_hundred']
     
@@ -38,6 +47,9 @@ def load_data():
     col_dtypes = dict_merge(col_dtypes_objct, col_dtypes_float)
     
     data = pd.read_csv('owid-covid-data.csv', dtype=col_dtypes)
+    
+    # Delete the file
+    os.remove('owid-covid-data.csv')
     gc.collect()
     
     # Sampling
