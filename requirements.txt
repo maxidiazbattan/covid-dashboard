@@ -1,4 +1,4 @@
-dash==2.0.0 
+dash==2.16.1
 pandas>=0.19
 Jinja2==3.0.3
 plotly>=5.0.0
