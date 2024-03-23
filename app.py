@@ -21,9 +21,15 @@ def load_data():
 
     # Read the file with pandas
     data = pd.read_csv('owid-covid-data.csv')
-    
+
+    # Data tipe handling
+    float_f = [feature for feature in data.columns if data[feature].dtype == 'float64']
+    data[float_f] = data[float_f].astype('float32')
+
+    # Sampling
     data = data.sample(frac=.2, random_state=42)
 
+    # Conversion to datetime
     data['date'] = pd.to_datetime(data['date'])
 
     # Creating 3 columns with the year, month, and day respectively
