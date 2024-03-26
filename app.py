@@ -76,16 +76,17 @@ def load_data():
                 'total_tests_per_million','new_tests_per_million', 'hospital_beds_per_million', 'total_vaccinations_per_million', 
                 'people_vaccinated_per_million', 'people_fully_vaccinated_per_million', 'total_boosters_per_million']
 
-    data = data.select(use_cols)
-
-
-    return data.to_pandas()
+    return data.select(use_cols).to_pandas()
     
 data = load_data()
 
 select_continent = {x : x for x in data["continent"].dropna().unique()}
 
-app = dash.Dash(__name__,external_stylesheets = [dbc.themes.CYBORG])# [dbc.themes.CYBORG]) 
+app = dash.Dash(__name__,external_stylesheets = [dbc.themes.CYBORG],
+                         meta_tags=[{'name': 'viewport',
+                                     'content': 'width=device-width, initial-scale=1.0'
+                           }] 
+                ) # [dbc.themes.CYBORG]) 
 server = app.server
 
 app.layout = dbc.Container([
@@ -102,6 +103,7 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
+                                 style={'justify-content': 'center', 'align-items': 'center', 'widht': '100px'}
                                  # style= {'Width': 'auto', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
                                     ),
 
