@@ -29,6 +29,7 @@ In the following link you can see it, https://covid-dashboard-colj.onrender.com/
 
 * [Python](https://docs.python.org/3/) - Programming language
 * [Pandas](https://pandas.pydata.org/docs/) - Data manipulation python library
+* [Polars](https://docs.pola.rs/) - Data manipulation python library 
 * [Plotly](https://plotly.com/python/) - Graphing python library
 * [Dash](https://dash.plotly.com/) - Dashboard python library
 
