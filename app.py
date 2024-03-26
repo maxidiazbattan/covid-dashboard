@@ -102,9 +102,9 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
-                                 style= {'borderRadius': '5px', 
-                                         'width': '100%', 
-                                         'verticalAlign' : "middle"}, 
+                                 style={'borderRadius': '5px', 
+                                        'width': '100%', 
+                                        'verticalAlign' : "middle"}, 
                                  className="ml-2 ",
                                     ),
 
@@ -124,9 +124,9 @@ app.layout = dbc.Container([
                                             start_date=data['date'].min(),
                                             end_date=data['date'].max(),
 
-                                            style= {'borderRadius': '5px',
-                                                    'width': '100%', 
-                                                    'verticalAlign' : "middle"}
+                                            style={'borderRadius': '5px',
+                                                   'width': '100%', 
+                                                   'verticalAlign' : "middle"}
 
                                             # style= {'width': 'auto', #'100%', 'height': '30px', 'font-size': '10px',
                                             #         'borderRadius': '5px',
@@ -134,7 +134,7 @@ app.layout = dbc.Container([
                                             #         'horizontalAlign' : "middle" }
                                             ), 
                                  ])
-                            ],className="card text-center m-1"),
+                            ],className="dropdown-card text-center m-1"),
                         ],width={'size': 4}, ),
             ],),
 
