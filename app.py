@@ -34,18 +34,18 @@ def load_data():
     # Read the file with polars
     data = pl.read_csv('owid-covid-data.csv')
 
-    use_cols = ['iso_code', 'continent', 'location', 'date', 'new_cases_per_million', 'new_deaths_per_million',
+    use_cols = ['iso_code', 'continent', 'location', 'date', 'total_deaths', 'total_cases', 'new_cases_per_million', 'new_deaths_per_million',
                 'total_tests_per_thousand','new_tests_per_thousand', 'hospital_beds_per_thousand', 'total_vaccinations_per_hundred', 
                 'people_vaccinated_per_hundred', 'people_fully_vaccinated_per_hundred', 'total_boosters_per_hundred']
 
     data = data.select(use_cols)
 
     # Delete the file
-    os.remove('owid-covid-data.csv')
+    # os.remove('owid-covid-data.csv')
     gc.collect()
 
     # Conversion to datetime
-    data = data.with_columns(pl.col('date').cast(pl.Date))
+    data = data.with_columns(pl.col('date').str.strptime(pl.Datetime, strict=False))
 
     # Creating 3 columns with the year, month, and day respectively
 
@@ -61,6 +61,8 @@ def load_data():
 
     # Unifying units of measure
     data = data.with_columns(
+        pl.col('new_cases_per_million').cast(pl.Float32, strict=False),
+        pl.col('new_deaths_per_million').cast(pl.Float32, strict=False),
         (pl.col('total_tests_per_thousand').cast(pl.Float32, strict=False) * 1000).alias('total_tests_per_million'),
         (pl.col('new_tests_per_thousand').cast(pl.Float32, strict=False) * 1000).alias('new_tests_per_million'),
         (pl.col('hospital_beds_per_thousand').cast(pl.Float32, strict=False) * 1000).alias('hospital_beds_per_million'),
@@ -70,8 +72,15 @@ def load_data():
         (pl.col('total_boosters_per_hundred').cast(pl.Float32, strict=False) * 10000).alias('total_boosters_per_million'),
                     )
 
-    return data.to_pandas()
+    use_cols = ['iso_code', 'continent', 'location', 'date', 'total_deaths', 'total_cases', 'new_cases_per_million', 'new_deaths_per_million',
+                'total_tests_per_million','new_tests_per_million', 'hospital_beds_per_million', 'total_vaccinations_per_million', 
+                'people_vaccinated_per_million', 'people_fully_vaccinated_per_million', 'total_boosters_per_million']
 
+    data = data.select(use_cols)
+
+
+    return data.to_pandas()
+    
 data = load_data()
 
 select_continent = {x : x for x in data["continent"].dropna().unique()}
@@ -189,26 +198,21 @@ app.layout = dbc.Container([
 
 def display_status(continent, start_date, end_date):
 
-    dfq = data.copy()
+    dfq = data.query(f'continent == "{continent}"')
 
-    dfqw = dfq.query(f'continent == "{continent}"')
-    casos_acumulados_ww = dfqw['new_cases_per_million'].sum().round(2)
-
-    #start_date = dfq['date'].min()
-    #end_date = dfq['date'].max()
+    start_date = dfq['date'].min()
+    end_date = dfq['date'].max()
 
     dfq = dfq[(dfq['date']>=start_date) & (dfq['date']<=end_date)]
 
-    dfq = dfq.query(f'continent == "{continent}"')
-
-    casos_acumulados = round(dfq[dfq['date'] == dfq['date'].max()]['new_cases_per_million'].sum(), 2)
-    muertes_acumulado = round(dfq[dfq['date'] == dfq['date'].max()]['new_deaths_per_million'].sum(), 2)
-    mortality_rate = round((dfq['total_deaths'] / dfq['total_cases'] * 100).sum() / len(dfq['total_deaths'].dropna()), 2)
+    casos_acumulados = dfq[dfq['date'] == dfq['date'].max()]['total_cases'].sum().astype('int32') / 1_000_000
+    muertes_acumulado = dfq[dfq['date'] == dfq['date'].max()]['total_deaths'].sum().astype('int32') / 1_000_000
+    mortality_rate = (dfq['total_deaths'] / dfq['total_cases'] * 100).sum() / len(dfq['total_deaths'].dropna())
 
     return (
-             casos_acumulados,
-             muertes_acumulado,
-             mortality_rate
+             casos_acumulados.round(2),
+             muertes_acumulado.round(2),
+             mortality_rate.round(2)
             )
 
 # Pie Chart ***********************************************************
@@ -222,12 +226,8 @@ def update_pie(continent, start_date, end_date):
 
     df1 = data.copy()
 
-    #start_date = df1['date'].min()
-    #end_date = df1['date'].max()
-
-    df1 = df1[(df1['date']>=start_date) & (df1['date']<=end_date)]
-
     df1 = df1.query(f'continent == "{continent}"')
+    df1 = df1[(df1['date']>=start_date) & (df1['date']<=end_date)]
 
     df1 = df1.groupby('location').mean().sort_values(by='new_cases_per_million', ascending=False)[:10]
     fig_pie = px.pie(df1, names=df1.index, values=df1['new_cases_per_million'],hole=0.7,color=df1.index, title='New cases per million')
@@ -253,10 +253,8 @@ def update_hist1(continent, start_date, end_date):
 
     df2 = data.copy()
 
-    df2 = df2[(df2['date']>=start_date) & (df2['date']<=end_date)]
-
     df2 = df2.query(f'continent == "{continent}"')
-
+    df2 = df2[(df2['date']>=start_date) & (df2['date']<=end_date)]
 
     fig_hist1 = px.histogram(data_frame = df2, y = 'location', x = df2['people_fully_vaccinated_per_million'].rolling(7).mean(), color = 'location',
              color_discrete_sequence=px.colors.qualitative.Plotly,
@@ -289,13 +287,8 @@ def update_hist2(continent, start_date, end_date):
 
     df3 = data.copy()
 
-    #start_date = df3['date'].min()
-    #end_date = df3['date'].max()
-
-    df3 = df3[(df3['date']>=start_date) & (df3['date']<=end_date)]
-
     df3 = df3.query(f'continent == "{continent}"')
-
+    df3 = df3[(df3['date']>=start_date) & (df3['date']<=end_date)]
 
     fig_hist2 = px.histogram(data_frame = df3, y = 'location', x = 'new_deaths_per_million', color = 'location',
                              color_discrete_sequence=px.colors.qualitative.Plotly,
@@ -328,13 +321,8 @@ def update_line(continent, start_date, end_date):
 
     df4 = data.copy()
 
-    #start_date = df4['date'].min()
-    #end_date = df4['date'].max()
-
-    df4 = df4[(df4['date']>=start_date) & (df4['date']<=end_date)]
-
     df4 = df4.query(f'continent == "{continent}"')
-
+    df4 = df4[(df4['date']>=start_date) & (df4['date']<=end_date)]
 
     fig_line = px.area(data_frame = df4, x = 'date', y = 'new_cases_per_million', color = 'location',
                        color_discrete_sequence=px.colors.qualitative.Plotly,
