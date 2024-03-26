@@ -102,7 +102,7 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
-                                 style= {'borderRadius': '5px', 'width': 'auto', 'verticalAlign' : "middle"}, className="m-1",
+                                 style= {'borderRadius': '5px', 'width': '100%', 'verticalAlign' : "middle"}, className="ml-2 ",
                                     ),
 
                      ], style={"width": "100%"}) ], className="dropdown-card main-navigation m-1"
