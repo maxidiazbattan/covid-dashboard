@@ -133,8 +133,7 @@ app.layout = dbc.Container([
                                             #         'align-items': 'center', 'verticalAlign' : "middle",
                                             #         'horizontalAlign' : "middle" }
                                             ), 
-                                 ])
-                            ],className="dropdown-card text-center m-1"),
+                                 ], style={"width": "100%"}) ],className="dropdown-card text-center m-1"),
                         ],width={'size': 4}, ),
             ],),
 
@@ -333,7 +332,7 @@ def update_line(continent, start_date, end_date):
     df4 = df4.query(f'continent == "{continent}"')
     df4 = df4[(df4['date']>=start_date) & (df4['date']<=end_date)]
 
-    fig_line = px.area(data_frame = df4, x = 'date', y = 'new_cases_per_million', color = 'location',
+    fig_line = px.area(data_frame = df4, x = 'date', y = df4['new_deaths_per_million'].rolling(7).mean(), color = 'location',
                        color_discrete_sequence=px.colors.qualitative.Plotly,
                        labels = {'location': 'Country', 'new_cases_per_million': 'Cases per million'},
                        title = 'Cases per million')
