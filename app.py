@@ -105,10 +105,10 @@ app.layout = dbc.Container([
                                  style= {'Width': 'auto', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
                                     ),
 
-                     ]),], className="px-1"),
-                 ], width={'size':4}, className="mt-3 mb-0"),
+                     ]),], className="card text-center mt-2 mb-2"),
+                 ], width={'size':4}),
             # ], justify='center'),
-
+        
     # dbc.Row([
             dbc.Col([
                 dbc.Card([
