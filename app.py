@@ -28,10 +28,10 @@ def load_data():
     # OWID covid Dataset URL:
     url = 'https://covid.ourworldindata.org/data/owid-covid-data.csv'
 
-    # Retrieve .CSV file from OWID
+    # retrieve .CSV file from OWID
     urlretrieve(url, 'owid-covid-data.csv')
 
-    # Read the file with polars
+    # read the file with polars
     data = pl.read_csv('owid-covid-data.csv')
 
     use_cols = ['iso_code', 'continent', 'location', 'date', 'total_deaths', 'total_cases', 'new_cases_per_million', 'new_deaths_per_million',
@@ -40,26 +40,25 @@ def load_data():
 
     data = data.select(use_cols)
 
-    # Delete the file
+    # delete the file
     # os.remove('owid-covid-data.csv')
     gc.collect()
 
-    # Conversion to datetime
+    # conversion to datetime
     data = data.with_columns(pl.col('date').str.strptime(pl.Datetime, strict=False))
 
-    # Creating 3 columns with the year, month, and day respectively
-
+    # creating 3 columns with the year, month, and day respectively
     data = data.with_columns(
         pl.col("date").dt.year().alias('year'),
         pl.col("date").dt.month().alias('month'),
         pl.col("date").dt.day().alias('day'),
         )
 
-    # Filtering
+    # filtering
     years = [2020, 2021, 2022]
     data = data.filter(pl.col('year').is_in(years))
 
-    # Unifying units of measure
+    # unifying units of measure
     data = data.with_columns(
         pl.col('new_cases_per_million').cast(pl.Float32, strict=False),
         pl.col('new_deaths_per_million').cast(pl.Float32, strict=False),
@@ -86,7 +85,7 @@ app = dash.Dash(__name__,external_stylesheets = [dbc.themes.CYBORG],
                          meta_tags=[{'name': 'viewport',
                                      'content': 'width=device-width, initial-scale=1.0'
                            }] 
-                ) # [dbc.themes.CYBORG]) 
+                ) 
 server = app.server
 
 app.layout = dbc.Container([
@@ -103,11 +102,11 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
-                                 style={'justify-content': 'center', 'align-items': 'center', 'widht': '100px'}
+                                 style={'justify-content': 'center', 'align-items': 'center', 'width': '100px'}
                                  # style= {'Width': 'auto', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
                                     ),
 
-                     ]),], className="card text-center mt-2 mb-2"),
+                     ]),], className="card text-center ml-1 mt-2 mb-2"),
                  ], width={'size': 4}),
             # ], justify='center'),
         
@@ -187,7 +186,7 @@ app.layout = dbc.Container([
 ], fluid=True)
 
 
-# Updating the 3 number cards ******************************************
+# updating the 3 number cards ******************************************
 @app.callback(
 
     Output('nuevos-casos-text','children'),
@@ -217,7 +216,7 @@ def display_status(continent, start_date, end_date):
              mortality_rate.round(2)
             )
 
-# Pie Chart ***********************************************************
+# pie Chart ***********************************************************
 @app.callback(
     Output('pie-plot','figure'),
     Input('continent-dropdown','value'),
@@ -244,7 +243,7 @@ def update_pie(continent, start_date, end_date):
     return fig_pie
 
 
-# Hist Chart ***********************************************************
+# hist Chart ***********************************************************
 @app.callback(
     Output('hist1-plot','figure'),
     Input('continent-dropdown','value'),
@@ -278,7 +277,7 @@ def update_hist1(continent, start_date, end_date):
 
     return fig_hist1
 
-# Hist Chart ***********************************************************
+# hist Chart ***********************************************************
 @app.callback(
     Output('hist2-plot','figure'),
     Input('continent-dropdown','value'),
@@ -312,7 +311,7 @@ def update_hist2(continent, start_date, end_date):
 
     return fig_hist2
 
-# Line Chart ***********************************************************
+# area Chart ***********************************************************
 @app.callback(
     Output('line-plot','figure'),
     Input('continent-dropdown','value'),
@@ -333,7 +332,6 @@ def update_line(continent, start_date, end_date):
 
     fig_line.update_yaxes(showgrid=False, ticksuffix=' ', showline=False, categoryorder='total ascending')
     fig_line.update_xaxes(visible=False)
-
     fig_line.update_layout(margin=dict(t=100, b=10, l=70, r=40),showlegend=True,
                            hovermode="y unified",
                            yaxis_title=" ",
@@ -344,7 +342,6 @@ def update_line(continent, start_date, end_date):
                            hoverlabel=dict(bgcolor="#c6ccd8", font_size=13, font_family="Lato, sans-serif"))
 
     return fig_line
-
 
 if __name__ =='__main__':
     app.run_server(host='127.0.0.1',port=8500, use_reloader=False)
