@@ -102,11 +102,11 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
-                                 style= {'Width': 'auto', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
+                                 # style= {'Width': 'auto', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
                                     ),
 
                      ]),], className="card text-center mt-2 mb-2"),
-                 ], width={'size':4}),
+                 ], width={'size': 4}),
             # ], justify='center'),
         
     # dbc.Row([
@@ -126,7 +126,7 @@ app.layout = dbc.Container([
                                             )
                                             ,])
                             ],className="card text-center mt-2 mb-2"),
-                        ],width={'size':4}, ),
+                        ],width={'size': 4}, ),
             ],),
 
     dbc.Row([dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed cases per million", className="card-text text-center"),
