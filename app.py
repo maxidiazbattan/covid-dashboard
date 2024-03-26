@@ -74,7 +74,7 @@ def load_data():
     use_cols = ['iso_code', 'continent', 'location', 'date', 'total_deaths', 'total_cases', 'new_cases_per_million', 'new_deaths_per_million',
                 'total_tests_per_million','new_tests_per_million', 'hospital_beds_per_million', 'total_vaccinations_per_million', 
                 'people_vaccinated_per_million', 'people_fully_vaccinated_per_million', 'total_boosters_per_million']
-
+    
     return data.select(use_cols).to_pandas()
     
 data = load_data()
@@ -106,9 +106,9 @@ app.layout = dbc.Container([
                                  # style= {'Width': 'auto', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
                                     ),
 
-                     # ]),], className="card text-center ml-1 mt-2 mb-2"
+                     ]),], #className="card text-center ml-1 mt-2 mb-2"
                     ),
-                 ], width={'size': 4, 'offset':2}),
+                 ], width={'size': 4, 'offset': 2}),
             # ], justify='center'),
         
     # dbc.Row([
