@@ -102,13 +102,12 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
-                                 style={'justify-content': 'center', 'align-items': 'center', 'width': '100px'}
-                                 # style= {'Width': 'auto', 'align-items': 'center', 'verticalAlign' : "middle", 'horizontalAlign' : "middle"},
+                                 style= {'borderRadius': '10px'}, className="m-1",
                                     ),
 
-                     ]),], #className="card text-center ml-1 mt-2 mb-2"
+                     ]),], className="dropdown-card main-navigation"
                     ),
-                 ], width={'size': 4, 'offset': 2}),
+                 ], width={'size': 4}),
             # ], justify='center'),
         
     # dbc.Row([
