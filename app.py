@@ -102,7 +102,10 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
-                                 style= {'borderRadius': '5px', 'width': '100%', 'verticalAlign' : "middle"}, className="ml-2 ",
+                                 style= {'borderRadius': '5px', 
+                                         'width': '100%', 
+                                         'verticalAlign' : "middle"}, 
+                                 className="ml-2 ",
                                     ),
 
                      ], style={"width": "100%"}) ], className="dropdown-card main-navigation m-1"
@@ -120,13 +123,18 @@ app.layout = dbc.Container([
                                             initial_visible_month=data['date'].min(),
                                             start_date=data['date'].min(),
                                             end_date=data['date'].max(),
-                                            style= {'width': 'auto', #'100%', 'height': '30px', 'font-size': '10px',
-                                                    'borderRadius': '5px',
-                                                    'align-items': 'center', 'verticalAlign' : "middle",
-                                                    'horizontalAlign' : "middle" }
+
+                                            style= {'borderRadius': '5px',
+                                                    'width': '100%', 
+                                                    'verticalAlign' : "middle"}
+
+                                            # style= {'width': 'auto', #'100%', 'height': '30px', 'font-size': '10px',
+                                            #         'borderRadius': '5px',
+                                            #         'align-items': 'center', 'verticalAlign' : "middle",
+                                            #         'horizontalAlign' : "middle" }
                                             ), 
                                  ])
-                            ],className="card text-center mt-2 mb-2"),
+                            ],className="card text-center m-1"),
                         ],width={'size': 4}, ),
             ],),
 
