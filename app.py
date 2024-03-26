@@ -18,69 +18,59 @@ from dash.dependencies import Input, Output
 
 # data handling 
 import pandas as pd
+import polars as pl
 
 # dates 
 from datetime import date
 
 def load_data():
+
     # OWID covid Dataset URL:
     url = 'https://covid.ourworldindata.org/data/owid-covid-data.csv'
 
-    # Retrive .CSV file from OWID
+    # Retrieve .CSV file from OWID
     urlretrieve(url, 'owid-covid-data.csv')
 
-    # Read the file with pandas
-    data = pd.read_csv('owid-covid-data.csv', nrows=5)
-       
-    use_cols = ['iso_code', 'continent', 'location', 'date', 'total_tests_per_thousand','new_tests_per_thousand', 'hospital_beds_per_thousand', 
-                'total_vaccinations_per_hundred', 'people_vaccinated_per_hundred', 'people_fully_vaccinated_per_hundred', 'total_boosters_per_hundred']
-    
-    data = data[use_cols]
-    
-    objct_f = [feature for feature in data.columns if data[feature].dtype == 'O']
-    float_f = [feature for feature in data.columns if data[feature].dtype == 'float64']
-    
-    col_dtypes_objct = {c: 'O' for c in data[objct_f].columns}
-    col_dtypes_float = {c: 'float32' for c in data[float_f].columns}
-    
-    dict_merge = lambda a,b: a.update(b) or a
-    col_dtypes = dict_merge(col_dtypes_objct, col_dtypes_float)
-    
-    data = pd.read_csv('owid-covid-data.csv', dtype=col_dtypes)
-    
+    # Read the file with polars
+    data = pl.read_csv('owid-covid-data.csv')
+
+    use_cols = ['iso_code', 'continent', 'location', 'date', 'new_cases_per_million', 'new_deaths_per_million',
+                'total_tests_per_thousand','new_tests_per_thousand', 'hospital_beds_per_thousand', 'total_vaccinations_per_hundred', 
+                'people_vaccinated_per_hundred', 'people_fully_vaccinated_per_hundred', 'total_boosters_per_hundred']
+
+    data = data.select(use_cols)
+
     # Delete the file
     os.remove('owid-covid-data.csv')
     gc.collect()
-    
-    # Sampling
-    data = data.sample(frac=.25, random_state=42)
 
     # Conversion to datetime
-    data['date'] = pd.to_datetime(data['date'])
+    data = data.with_columns(pl.col('date').cast(pl.Date))
 
     # Creating 3 columns with the year, month, and day respectively
-    data['day'] = data['date'].dt.day
-    data['month'] = data['date'].dt.month
-    data['year'] = data['date'].dt.year
 
-    # Filtering 
+    data = data.with_columns(
+        pl.col("date").dt.year().alias('year'),
+        pl.col("date").dt.month().alias('month'),
+        pl.col("date").dt.day().alias('day'),
+        )
+
+    # Filtering
     years = [2020, 2021, 2022]
-    data = data[data.year.isin(years)]
+    data = data.filter(pl.col('year').is_in(years))
 
-    # Unifiyng units of messure 
-    data['total_tests_per_million'] = data['total_tests_per_thousand'] * 1000
-    data['new_tests_per_million'] = data['new_tests_per_thousand'] * 1000
-    data['hospital_beds_per_million'] = data['hospital_beds_per_thousand'] * 1000
-    data['total_vaccinations_per_million'] = data['total_vaccinations_per_hundred'] * 10000
-    data['people_vaccinated_per_million'] = data['people_vaccinated_per_hundred'] * 10000
-    data['people_fully_vaccinated_per_million'] = data['people_fully_vaccinated_per_hundred'] * 10000
-    data['total_boosters_per_million'] = data['total_boosters_per_hundred'] * 10000
+    # Unifying units of measure
+    data = data.with_columns(
+        (pl.col('total_tests_per_thousand').cast(pl.Float32, strict=False) * 1000).alias('total_tests_per_million'),
+        (pl.col('new_tests_per_thousand').cast(pl.Float32, strict=False) * 1000).alias('new_tests_per_million'),
+        (pl.col('hospital_beds_per_thousand').cast(pl.Float32, strict=False) * 1000).alias('hospital_beds_per_million'),
+        (pl.col('total_vaccinations_per_hundred').cast(pl.Float32, strict=False) * 10000).alias('total_vaccinations_per_million'),
+        (pl.col('people_vaccinated_per_hundred').cast(pl.Float32, strict=False) * 10000).alias('people_vaccinated_per_million'),
+        (pl.col('people_fully_vaccinated_per_hundred').cast(pl.Float32, strict=False) * 10000).alias('people_fully_vaccinated_per_million'),
+        (pl.col('total_boosters_per_hundred').cast(pl.Float32, strict=False) * 10000).alias('total_boosters_per_million'),
+                    )
 
-    use_cols = ['date', 'day', 'month', 'year','continent','location', 'total_cases', 'total_deaths', 'total_tests_per_million', 'new_tests_per_million', 'new_cases_per_million',
-                'new_deaths_per_million', 'hospital_beds_per_million', 'total_vaccinations_per_million', 'people_vaccinated_per_million', 'people_fully_vaccinated_per_million']
-    data = data[use_cols]
-
-    return data
+    return data.to_pandas()
 
 data = load_data()
 
