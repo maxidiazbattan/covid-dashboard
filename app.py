@@ -102,10 +102,10 @@ app.layout = dbc.Container([
                                  options=[{"label": j, "value": i} for i, j in select_continent.items()],
                                  value="Africa",
                                  clearable=False,
-                                 style= {'borderRadius': '5px'}, className="m-1",
+                                 style= {'borderRadius': '5px', 'width': 'auto', 'verticalAlign' : "middle"}, className="m-1",
                                     ),
 
-                     ], style={"width": "100%"}) ], className="dropdown-card main-navigation"
+                     ], style={"width": "100%"}) ], className="dropdown-card main-navigation m-1"
                     ),
                  ], width={'size': 4}),
             # ], justify='center'),
@@ -114,17 +114,16 @@ app.layout = dbc.Container([
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        dcc.DatePickerRange(
-                                             id='my-date-picker-range',
-                                             min_date_allowed=data['date'].min(),
-                                             max_date_allowed=data['date'].max(),
-                                             initial_visible_month=data['date'].min(),
-                                             start_date=data['date'].min(),
-                                             end_date=data['date'].max(),
-                                             style= {'width': 'auto', #'100%', 'height': '30px', 'font-size': '10px',
-                                                     'borderRadius': '5px',
-                                                     'align-items': 'center', 'verticalAlign' : "middle",
-                                                     'horizontalAlign' : "middle" }
+                        dcc.DatePickerRange(id='my-date-picker-range',
+                                            min_date_allowed=data['date'].min(),
+                                            max_date_allowed=data['date'].max(),
+                                            initial_visible_month=data['date'].min(),
+                                            start_date=data['date'].min(),
+                                            end_date=data['date'].max(),
+                                            style= {'width': 'auto', #'100%', 'height': '30px', 'font-size': '10px',
+                                                    'borderRadius': '5px',
+                                                    'align-items': 'center', 'verticalAlign' : "middle",
+                                                    'horizontalAlign' : "middle" }
                                             ), 
                                  ])
                             ],className="card text-center mt-2 mb-2"),
