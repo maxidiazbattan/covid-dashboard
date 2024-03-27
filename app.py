@@ -82,9 +82,10 @@ data = load_data()
 select_continent = {x : x for x in data["continent"].dropna().unique()}
 
 app = dash.Dash(__name__,external_stylesheets = [dbc.themes.CYBORG],
-                         meta_tags=[{'name': 'viewport',
-                                     'content': 'width=device-width, initial-scale=0.7, maximum-scale=1., minimum-scale=0.5',
-                           }] 
+                         meta_tags=[{
+                             'name': 'viewport',
+                             'content': 'width=device-width, initial-scale=0.6, maximum-scale=.9, minimum-scale=0.5',
+                                    }] 
                 ) 
 server = app.server
 
@@ -108,30 +109,22 @@ app.layout = dbc.Container([
                      ], style={"width": "100%"}) ], className="dropdown-card main-navigation m-1"
                     ),
                  ], width={'size': 4}),
-            # ], justify='center'),
         
-    # dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardBody([
-                        dcc.DatePickerRange(id='my-date-picker-range',
-                                            min_date_allowed=data['date'].min(),
-                                            max_date_allowed=data['date'].max(),
-                                            initial_visible_month=data['date'].min(),
-                                            start_date=data['date'].min(),
-                                            end_date=data['date'].max(),
-
-                                            style={'borderRadius': '5px',
-                                                   'width': '100%', 
-                                                   'verticalAlign' : "middle"}
-
-                                            # style= {'width': 'auto', #'100%', 'height': '30px', 'font-size': '10px',
-                                            #         'borderRadius': '5px',
-                                            #         'align-items': 'center', 'verticalAlign' : "middle",
-                                            #         'horizontalAlign' : "middle" }
-                                            ), 
-                                 ], style={"width": "100%"}) ],className="dropdown-card text-center m-1"),
-                        ],width={'size': 4}, ),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.DatePickerRange(id='my-date-picker-range',
+                                        min_date_allowed=data['date'].min(),
+                                        max_date_allowed=data['date'].max(),
+                                        initial_visible_month=data['date'].min(),
+                                        start_date=data['date'].min(),
+                                        end_date=data['date'].max(),
+                                        style={'borderRadius': '5px',
+                                               'width': 'auto', 
+                                               'verticalAlign' : "middle"}
+                                        ), 
+                             ], style={"width": "100%"}) ],className="dropdown-card text-center m-1"),
+                    ],width={'size': 4}, ),
             ],),
 
     dbc.Row([dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed cases per million", className="card-text text-center"),
@@ -331,8 +324,8 @@ def update_line(continent, start_date, end_date):
 
     fig_line = px.area(data_frame = df4, x = 'date', y = df4['new_deaths_per_million'].rolling(7).mean(), color = 'location',
                        color_discrete_sequence=px.colors.qualitative.Plotly,
-                       labels = {'location': 'Country', 'new_cases_per_million': 'Cases per million'},
-                       title = 'Cases per million')
+                       labels = {'location': 'Country', 'new_deaths_per_million': 'Deaths per million'},
+                       title = 'Weekly deaths per million')
 
     fig_line.update_yaxes(showgrid=False, ticksuffix=' ', showline=False, categoryorder='total ascending')
     fig_line.update_xaxes(visible=False)
