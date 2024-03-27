@@ -83,16 +83,13 @@ select_continent = {x : x for x in data["continent"].dropna().unique()}
 
 app = dash.Dash(__name__,external_stylesheets = [dbc.themes.CYBORG],
                          meta_tags=[{'name': 'viewport',
-                                     'content': 'width=device-width, initial-scale=1.0'
+                                     'content': 'width=device-width, initial-scale=0.7, maximum-scale=1., minimum-scale=0.5',
                            }] 
                 ) 
 server = app.server
 
 app.layout = dbc.Container([
-
-    # dbc.Row(dbc.Col(html.P(children="💉", className="header-emoji text-center"), width=12)),
-    # dbc.Row(dbc.Col(html.H1("COVID-19 Dashboard 💉", className='header-title text-center mb-2'), width=12)),
-
+    
     dbc.Row([
         dbc.Col(html.H3("COVID-19 🦠 Tracker", className='header-title text-center mt-4 mb-2'), width=4),
         dbc.Col([
