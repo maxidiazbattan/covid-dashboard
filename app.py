@@ -3,7 +3,9 @@
 # tools
 import os
 import gc
-from urllib.request import urlretrieve
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 # dash & dash components
 import dash
@@ -26,10 +28,17 @@ from datetime import date
 def load_data():
 
     # OWID covid Dataset URL:
-    url = 'https://covid.ourworldindata.org/data/owid-covid-data.csv'
+    url = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'
 
-    # retrieve .CSV file from OWID
-    urlretrieve(url, 'owid-covid-data.csv')
+    # fetch with retry logic (3 attempts, exponential backoff)
+    session = requests.Session()
+    retries = Retry(total=3, backoff_factor=2, status_forcelist=[500, 502, 503, 504])
+    session.mount('https://', HTTPAdapter(max_retries=retries))
+    response = session.get(url, timeout=30)
+    response.raise_for_status()
+
+    with open('owid-covid-data.csv', 'wb') as f:
+        f.write(response.content)
 
     # read the file with polars
     data = pl.read_csv('owid-covid-data.csv')
@@ -133,12 +142,12 @@ app.layout = dbc.Container([
                                  ], className="card text-center" )], width=4),
 
             dbc.Col([dbc.Card([dbc.CardBody([html.Span("Confirmed deaths per million", className="card-text text-center"),
-                                             html.H3(style={"color": "#data2935"}, id="muertes-confirmadas-text"),
+                                             html.H3(style={"color": "#df2935"}, id="muertes-confirmadas-text"),
                                              html.H5(id="muertes-text", children="0"),])
                                 ],  className="card text-center" )], width=4),
 
             dbc.Col([dbc.Card([dbc.CardBody([html.Span("Mortality rate %", className="card-text text-center"),
-                                               html.H3(style={"color": "#adatac92"}, id="mortality-rate-text"),
+                                               html.H3(style={"color": "#adfc92"}, id="mortality-rate-text"),
                                                html.H5(id="mortalidad-text", children="0"), ])
                                  ], className="card text-center" )],width=4),
             ]),
@@ -205,12 +214,15 @@ def display_status(continent, start_date, end_date):
 
     casos_acumulados = dfq[dfq['date'] == dfq['date'].max()]['total_cases'].sum().astype('int32') / 1_000_000
     muertes_acumulado = dfq[dfq['date'] == dfq['date'].max()]['total_deaths'].sum().astype('int32') / 1_000_000
-    mortality_rate = (dfq['total_deaths'] / dfq['total_cases'] * 100).sum() / len(dfq['total_deaths'].dropna())
+    last_day = dfq[dfq['date'] == dfq['date'].max()]
+    total_deaths_sum = last_day['total_deaths'].sum()
+    total_cases_sum = last_day['total_cases'].sum()
+    mortality_rate = (total_deaths_sum / total_cases_sum * 100) if total_cases_sum > 0 else 0
 
     return (
-             casos_acumulados.round(2),
-             muertes_acumulado.round(2),
-             mortality_rate.round(2)
+             round(casos_acumulados, 2),
+             round(muertes_acumulado, 2),
+             round(mortality_rate, 2) if pd.notna(mortality_rate) else 0
             )
 
 # pie Chart ***********************************************************
@@ -227,7 +239,7 @@ def update_pie(continent, start_date, end_date):
     df1 = df1.query(f'continent == "{continent}"')
     df1 = df1[(df1['date']>=start_date) & (df1['date']<=end_date)]
 
-    df1 = df1.groupby('location').mean().sort_values(by='new_cases_per_million', ascending=False)[:10]
+    df1 = df1.groupby('location').mean(numeric_only=True).sort_values(by='new_cases_per_million', ascending=False)[:10]
     fig_pie = px.pie(df1, names=df1.index, values=df1['new_cases_per_million'],hole=0.7,color=df1.index, title='New cases per million')
     fig_pie.update_traces(hovertemplate=None, textposition='inside', textinfo='percent+label', rotation=45)
     fig_pie.update_layout(showlegend=False,
