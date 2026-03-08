@@ -183,7 +183,7 @@ app.layout = dbc.Container([
                     dcc.Dropdown(
                         id="continent-dropdown",
                         options=[{"label": v, "value": k} for k, v in select_continent.items()],
-                        value="Africa",
+                        value="Asia",
                         clearable=False,
                         style={'borderRadius': '5px', 'width': '100%', 'verticalAlign': "middle"},
                         className="ml-2",
@@ -264,7 +264,7 @@ _LAYOUT_BASE = dict(
     plot_bgcolor='#000000',
     paper_bgcolor='#000000',
     title=dict(y=0.9, x=0.5, yanchor='top', xanchor='center'),
-    title_font=dict(size=25, color='#8a8d93', family="Lato, sans-serif"),
+    title_font=dict(size=22.5, color='#8a8d93', family="Lato, sans-serif", weight="bold"),
     font=dict(color='#8a8d93'),
     hoverlabel=dict(bgcolor="#c6ccd8", font_size=13, font_family="Lato, sans-serif"),
 )
@@ -339,16 +339,27 @@ def update_pie(continent, start_date, end_date):
 )
 def update_hist1(continent, start_date, end_date):
     df2 = get_slice(continent, start_date, end_date)
+    if df2.empty:
+        return go.Figure()
 
-    fig = px.histogram(
-        df2,
+    agg = (
+        df2.groupby('location', observed=True)['people_fully_vaccinated_per_million']
+           .max()
+           .dropna()
+           .reset_index()
+    )
+    agg = agg[agg['people_fully_vaccinated_per_million'] > 0]
+    agg['location'] = agg['location'].cat.remove_unused_categories()
+    agg = agg.sort_values('people_fully_vaccinated_per_million', ascending=True).tail(20)
+
+    fig = px.bar(
+        agg,
         y='location',
-        x=df2.groupby('location', observed=True)['people_fully_vaccinated_per_million']
-             .transform(lambda s: s.rolling(7).mean()),
+        x='people_fully_vaccinated_per_million',
         color='location',
         color_discrete_sequence=px.colors.qualitative.Plotly,
         labels={'location': 'Country', 'people_fully_vaccinated_per_million': 'Fully vaccinated per million'},
-        title='Fully vaccinated per million',
+        title='Fully vaccinated per million \n (Top 20)',
     )
     fig.update_yaxes(showgrid=False, ticksuffix=' ', showline=False, categoryorder='total ascending')
     fig.update_xaxes(visible=True)
@@ -373,15 +384,27 @@ def update_hist1(continent, start_date, end_date):
 )
 def update_hist2(continent, start_date, end_date):
     df3 = get_slice(continent, start_date, end_date)
+    if df3.empty:
+        return go.Figure()
 
-    fig = px.histogram(
-        df3,
+    agg = (
+        df3.groupby('location', observed=True)['new_deaths_per_million']
+           .sum()
+           .dropna()
+           .reset_index()
+    )
+    agg = agg[agg['new_deaths_per_million'] > 0]
+    agg['location'] = agg['location'].cat.remove_unused_categories()
+    agg = agg.sort_values('new_deaths_per_million', ascending=True).tail(20)
+
+    fig = px.bar(
+        agg,
         y='location',
         x='new_deaths_per_million',
         color='location',
         color_discrete_sequence=px.colors.qualitative.Plotly,
         labels={'location': 'Country', 'new_deaths_per_million': 'Deaths per million'},
-        title='Deaths per million',
+        title='Deaths per million \n (Top 20)',
     )
     fig.update_yaxes(showgrid=False, ticksuffix=' ', showline=False, categoryorder='total ascending')
     fig.update_xaxes(visible=True)
@@ -406,23 +429,43 @@ def update_hist2(continent, start_date, end_date):
 )
 def update_line(continent, start_date, end_date):
     df4 = get_slice(continent, start_date, end_date)
+    if df4.empty:
+        return go.Figure()
+
+    top_locations = (
+        df4.groupby('location', observed=True)['new_deaths_per_million']
+           .sum()
+           .nlargest(10)
+           .index
+    )
+
+    df_top = df4[df4['location'].isin(top_locations)].copy()
+    if df_top.empty:
+        return go.Figure()
+        
+    df_top['location'] = df_top['location'].cat.remove_unused_categories()
+
+    df_top['weekly_deaths'] = (
+        df_top.groupby('location', observed=True)['new_deaths_per_million']
+              .transform(lambda s: s.rolling(7).mean())
+    )
+    df_top = df_top.dropna(subset=['weekly_deaths'])
 
     fig = px.area(
-        df4,
+        df_top,
         x='date',
-        y=df4.groupby('location', observed=True)['new_deaths_per_million']
-             .transform(lambda s: s.rolling(7).mean()),
+        y='weekly_deaths',
         color='location',
         color_discrete_sequence=px.colors.qualitative.Plotly,
-        labels={'location': 'Country', 'new_deaths_per_million': 'Deaths per million'},
-        title='Weekly deaths per million',
+        labels={'location': 'Country', 'weekly_deaths': 'Deaths per million'},
+        title='Weekly deaths per million \n (Top 10)',
     )
     fig.update_yaxes(showgrid=False, ticksuffix=' ', showline=False, categoryorder='total ascending')
     fig.update_xaxes(visible=False)
     fig.update_layout(
         margin=dict(t=100, b=10, l=70, r=40),
         showlegend=True,
-        hovermode="y unified",
+        hovermode="x unified",
         yaxis_title=" ",
         **_LAYOUT_BASE,
     )
